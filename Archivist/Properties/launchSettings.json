@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Archivist": {
+      "commandName": "Project",
+      "commandLineArgs": "--target \"seekskateboards.com\" --dest \".\\Downloads\""
+    }
+  }
+}
