@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using System.Diagnostics;
+using System.IO;
 
 namespace Archivist
 {
@@ -29,10 +31,16 @@ namespace Archivist
 				.UseServiceProviderFactory(new AutofacServiceProviderFactory())
 				.ConfigureAppConfiguration((ctx, config) =>
 				{
-					config
-						.SetBasePath(ctx.HostingEnvironment.ContentRootPath)
-						.AddJsonFile("appsettings.json", optional: false);
-					root = config.Build();
+					using (var processModule = Process.GetCurrentProcess().MainModule)
+					{
+						var path = Path.GetDirectoryName(processModule?.FileName);
+						config
+							.SetBasePath(path)
+							.AddJsonFile("appsettings.json", optional: true);
+						root = config.Build();
+					}
+
+
 				})
 				.ConfigureLogging(builder =>
 				{
